@@ -5,31 +5,52 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist"
+        "distDir": "dist",
+        "cleanDistDir": true
       }
     }
   ],
-  "redirects": [
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    {
+      "src": "/_next/static/(.*)",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    {
+      "handle": "filesystem"
+    },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/index.html",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
     }
   ],
   "redirects": [
     {
       "source": "/legal",
       "destination": "/terms",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/tos",
       "destination": "/terms",
-      "permanent": false
+      "permanent": true
     },
     {
       "source": "/pp",
       "destination": "/privacy",
-      "permanent": false
+      "permanent": true
     }
   ],
   "headers": [
@@ -54,14 +75,15 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https:; font-src 'self' https:; connect-src 'self' https: wss:;"
-        },
-        {
-          "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=()"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; frame-src 'none'"
         }
       ]
     }
   ],
-  "framework": "vite"
+  "rewrites": [
+    {
+      "source": "/service-worker.js",
+      "destination": "/_next/static/service-worker.js"
+    }
+  ]
 }
