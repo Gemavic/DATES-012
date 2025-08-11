@@ -9,7 +9,7 @@
       }
     }
   ],
-  "routes": [
+  "rowrites": [
     {
       "src": "/(.*)",
       "dest": "/index.html"
